@@ -1,6 +1,51 @@
+1. [Insights installation fails due to missing mysqlclient and version mismatch](#insights-installation-fails-due-to-missing-mysqlclient-and-version-mismatch)
 1. [Fixing MariaDB issues after rebuilding the container](#fixing-mariadb-issues-after-rebuilding-the-container)
 1. [docker-compose does not recognize variables from `.env` file](#docker-compose-does-not-recognize-variables-from-env-file)
 1. [Windows Based Installation](#windows-based-installation)
+
+### Insights installation fails due to missing mysqlclient and version mismatch
+
+Installing the `insights` app may fail with an error about the `mysqlclient` package. This happens when the container lacks the
+required build dependencies. Install the appropriate development libraries before fetching the app:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential pkg-config default-libmysqlclient-dev
+# Or for MariaDB:
+# sudo apt-get install -y build-essential pkg-config libmariadb-dev
+```
+
+After installing the dependencies, reinstall the app:
+
+```bash
+bench get-app https://github.com/frappe/insights --branch version-15
+# If already cloned:
+pip install -e apps/insights
+bench build --app insights
+```
+
+Frappe apps must target the same framework version. If an app requires Frappe v16 but the bench is on v15, remove the
+incompatible apps and install their `version-15` branches:
+
+```bash
+bench remove-app helpdesk insights drive studio wiki
+bench get-app https://github.com/frappe/helpdesk --branch version-15
+bench get-app https://github.com/frappe/drive --branch version-15
+bench get-app https://github.com/frappe/studio --branch version-15
+bench get-app https://github.com/frappe/wiki --branch version-15
+bench get-app https://github.com/frappe/insights --branch version-15
+bench build
+bench restart
+```
+
+Additional build warnings can be addressed later:
+
+- Split large bundles with dynamic `import()` and `manualChunks` in `vite.config.js`.
+- Increase `maximumFileSizeToCacheInBytes` and add `theme_color` in the PWA configuration.
+- Import `ImageExtension` directly to avoid circular dependency warnings in `frappe-ui`.
+- Use `:is(selector)` for nested CSS rules or enable PostCSS nesting.
+- Move fonts to `public/` or configure Vite's asset handling so paths resolve at build time.
+- Install peer dependencies such as `workbox-build`, `workbox-window`, or `postcss` when required.
 
 ### Fixing MariaDB issues after rebuilding the container
 
