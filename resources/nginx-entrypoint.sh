@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Set variables that do not exist
 if [[ -z "$BACKEND" ]]; then
