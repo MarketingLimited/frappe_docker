@@ -122,7 +122,7 @@ ENV PATH=/home/frappe/.local/bin:$PATH
 # https://github.com/frappe/bench/commit/20560c97c4246b2480d7358c722bc9ad13606138
 RUN git clone ${GIT_REPO} --depth 1 -b ${GIT_BRANCH} .bench \
     && pip install --no-cache-dir --user -e .bench \
-    && pip install --no-cache-dir --user --upgrade beautifulsoup4 boto3 \
+    && pip install --no-cache-dir --user --upgrade beautifulsoup4 "boto3~=1.34.143" "Pillow~=11.3.0" \
     && echo "export PATH=/home/frappe/.local/bin:\$PATH" >>/home/frappe/.bashrc \
     && echo "export BENCH_DEVELOPER=1" >>/home/frappe/.bashrc
 
