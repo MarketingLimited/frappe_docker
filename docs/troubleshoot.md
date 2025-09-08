@@ -28,12 +28,12 @@ Frappe apps must target the same framework version. If an app requires Frappe v1
 incompatible apps and install their `version-15` branches:
 
 ```bash
-bench remove-app helpdesk insights drive studio wiki
+bench remove-app helpdesk insights drive builder lms
 bench get-app https://github.com/frappe/helpdesk --branch version-15
 bench get-app https://github.com/frappe/drive --branch version-15
-bench get-app https://github.com/frappe/studio --branch version-15
-bench get-app https://github.com/frappe/wiki --branch version-15
 bench get-app https://github.com/frappe/insights --branch version-15
+bench get-app https://github.com/frappe/builder --branch version-15
+bench get-app https://github.com/frappe/lms --branch version-15
 bench build
 bench restart
 ```
