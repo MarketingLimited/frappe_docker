@@ -3,7 +3,7 @@ FROM debian:bookworm-slim AS bench
 LABEL author=frappé
 
 ARG GIT_REPO=https://github.com/frappe/bench.git
-ARG GIT_BRANCH=v5.x
+ARG GIT_BRANCH=main
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
@@ -122,6 +122,7 @@ ENV PATH=/home/frappe/.local/bin:$PATH
 # https://github.com/frappe/bench/commit/20560c97c4246b2480d7358c722bc9ad13606138
 RUN git clone ${GIT_REPO} --depth 1 -b ${GIT_BRANCH} .bench \
     && pip install --no-cache-dir --user -e .bench \
+    && pip install --no-cache-dir --user --upgrade beautifulsoup4 boto3 \
     && echo "export PATH=/home/frappe/.local/bin:\$PATH" >>/home/frappe/.bashrc \
     && echo "export BENCH_DEVELOPER=1" >>/home/frappe/.bashrc
 
@@ -135,10 +136,10 @@ RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | 
     && . ${NVM_DIR}/nvm.sh \
     && nvm install ${NODE_VERSION_14} \
     && nvm use v${NODE_VERSION_14} \
-    && npm install -g yarn \
+    && npm install -g yarn pnpm \
     && nvm install ${NODE_VERSION} \
     && nvm use v${NODE_VERSION} \
-    && npm install -g yarn \
+    && npm install -g yarn pnpm \
     && nvm alias default v${NODE_VERSION} \
     && rm -rf ${NVM_DIR}/.cache \
     && echo 'export NVM_DIR="/home/frappe/.nvm"' >>~/.bashrc \
